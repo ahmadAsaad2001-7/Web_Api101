@@ -18,7 +18,7 @@ namespace Web_Api101.Controllers
         private readonly IMapper _mapper;
         public ClinicController(IClinicRepository clinicRepository, IMapper mapper, ILocationRepository locationRepository)
         {
-            clinicRepository = _clinicRepository;
+            _clinicRepository= clinicRepository  ;
             _mapper = mapper;
             _locationRepository = locationRepository;
         }
@@ -28,17 +28,17 @@ namespace Web_Api101.Controllers
         [HttpGet]
         [ProducesResponseType(200, Type = typeof(IEnumerable<clinics>))]
 
-        public IActionResult GetDoctors()
+        public IActionResult GetClinics()
         {
-            var doctors = _mapper.Map<List<ClinicsDto>>(_clinicRepository.GetClinics());
+            var clinic = _mapper.Map<List<ClinicsDto>>(_clinicRepository.GetClinics());
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
-            return Ok(doctors);
+            return Ok(clinic);
 
         }
         [HttpGet("clinicId")]
         [ProducesResponseType(200, Type = typeof(clinics))]
-        public IActionResult GetDoctor(int clinicId)
+        public IActionResult GetCLinic(int clinicId)
         {
             if (!_clinicRepository.clinicExists(clinicId))
                 return NotFound();
@@ -51,13 +51,21 @@ namespace Web_Api101.Controllers
 
         }
 
-        [HttpGet("phoneNumber")]
+        [HttpGet("doctorId")]
         [ProducesResponseType(200, Type = typeof(clinics))]
-        public IActionResult GetDoctorByPhone(string phoneNumber)
+        public IActionResult GetCLinicBydoctor(int doctorId)
         {
-            var res = _mapper.Map<List<DoctorsDto>>(_clinicRepository.GetClinicsByPhone(phoneNumber));
+            if (!_clinicRepository.clinicExists(doctorId))
+                return NotFound();
+            var res = _mapper.Map<DoctorsDto>(_clinicRepository.GetClinicsBydoctorId(doctorId));
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
             return Ok(res);
+
+
         }
+
 
         //create
         [HttpPost]
@@ -96,6 +104,32 @@ namespace Web_Api101.Controllers
 
             return Ok("Successfully created");
           
+        }
+
+        //delete
+
+        [HttpDelete("{clinicId}")]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(404)]
+        public IActionResult DeleteDoctor(int clinicId)
+        {
+            if (!_clinicRepository.clinicExists(clinicId))
+                return NotFound();
+
+            var clinicToBeDeleted = _clinicRepository.GetClinicsById(clinicId);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            if (!_clinicRepository.DeleteClinics(clinicToBeDeleted))
+            {
+                ModelState.AddModelError("", "something went wrong while deleting");
+                return StatusCode(500, ModelState);
+
+            }
+            return NoContent();
+
         }
 
 

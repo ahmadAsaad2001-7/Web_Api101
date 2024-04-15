@@ -16,9 +16,12 @@ namespace Web_Api101.Repository
 
 
 
-        public bool CreateHospital(hospitals hospital)
+        public bool CreateHospital( hospitals hospitals)
         {
-            throw new NotImplementedException();
+            _repository.Add(hospitals);
+            return Save();
+
+
         }
 
         public bool hospitalExist(int hospital_id)
@@ -30,7 +33,11 @@ namespace Web_Api101.Repository
 
         public bool deleteHospital(hospitals hospital)
         {
-            throw new NotImplementedException();
+
+            _repository.Remove(hospital);
+            return Save();
+
+
         }
 
         public ICollection<hospitals> GetHospitals()

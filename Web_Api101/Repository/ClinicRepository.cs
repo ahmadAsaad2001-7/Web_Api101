@@ -31,9 +31,13 @@ namespace Web_Api101.Repository
 
         }
 
-        public bool DeleteClinics(int id)
+        public bool DeleteClinics(clinics c)
         {
-            throw new NotImplementedException();
+            _Context.Remove(c);
+            return Save();
+
+
+
         }
 
         public ICollection<clinics> GetClinics()

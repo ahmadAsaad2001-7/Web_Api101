@@ -12,7 +12,7 @@ namespace Web_Api101.Interface
         bool clinicExists(int id);
         bool CreateClinic(int doctorid, clinics clinic);
         bool UpdateClinics(clinics clinics);
-        bool DeleteClinics(int id);
+        bool DeleteClinics(clinics clinic);
         bool Save();
 
 

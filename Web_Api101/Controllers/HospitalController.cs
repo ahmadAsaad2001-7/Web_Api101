@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Web_Api101.Dto;
 using Web_Api101.Interface;
@@ -12,9 +13,11 @@ namespace Web_Api101.Controllers
     public class HospitalController : ControllerBase
     {
         private readonly IHospitalRepository _hospitalRepository;
-        public HospitalController(IHospitalRepository hospitalRepository)
+        private readonly IMapper _mapper;
+        public HospitalController(IHospitalRepository hospitalRepository,IMapper mapper)
         {
             _hospitalRepository = hospitalRepository;
+            _mapper = mapper;
         }
 
         [HttpGet]
@@ -45,6 +48,43 @@ namespace Web_Api101.Controllers
             var res = (_hospitalRepository.GetHospitalsByPhone(HospitalPhone));
 
             return Ok(res);
+        }
+        //Create
+        [HttpPost]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        public IActionResult CreateDoctor(  [FromBody] HospitalDto hospitalCreate)
+        {
+            if (hospitalCreate == null)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var Pokemon = _hospitalRepository.GetHospitals()
+                .Where(o => o.hospital_name.Trim().ToLower() == hospitalCreate.hospital_name.TrimEnd().ToLower()).FirstOrDefault();
+
+
+            if (Pokemon != null)
+            {
+                ModelState.AddModelError("", "doctor already exists");
+                return StatusCode(422, ModelState);
+            }
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var hospitalsMap = _mapper.Map<hospitals>(hospitalCreate);
+
+
+
+            if (!_hospitalRepository.CreateHospital( hospitalsMap))
+            {
+                ModelState.AddModelError("", "Something went wrong while saving");
+                return StatusCode(500, ModelState);
+            }
+
+            return Ok("Successfully created");
+
         }
 
     }

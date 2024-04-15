@@ -22,7 +22,13 @@ namespace Web_Api101.helper
             CreateMap<PhonesDto, phones>();
             CreateMap<burns, BurnsDto>();
             CreateMap<BurnsDto, burns>();
-        }
+            CreateMap<hospital_doctor, Hospital_DoctorDto>();
+            CreateMap<Hospital_DoctorDto, hospital_doctor>();
+            CreateMap<doctor_clinic, clinic_DoctorDto>();
+            CreateMap<clinic_DoctorDto, doctor_clinic>();
 
+        }
     }
+
 }
+

@@ -9,7 +9,7 @@ namespace Web_Api101.Interface
       public  ICollection<phones> GetPhonesByHospitalId(int id);
        public hospitals GetHospitalsByPhone(string PhoneNumber);
          public bool HasHospital(string hospital_name);
-         public bool CreateHospital(hospitals hospital);
+        public bool CreateHospital( hospitals hospitals);
          public bool UpdateHospital(hospitals hospital);
          public bool deleteHospital(hospitals hospital);
         public bool hospitalExist(int hospital_id);

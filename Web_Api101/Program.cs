@@ -10,6 +10,10 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 builder.Services.AddScoped<IDoctorRepository, DoctorRepository>();
 builder.Services.AddScoped<IClinicRepository, ClinicRepository>();
+builder.Services.AddScoped<ILocationRepository, LocationRepository>();
+builder.Services.AddScoped<IHospitalRepository, HospitalRepository>();
+builder.Services.AddScoped<IDoctor_hospitalRepository,Doctor_HospitalRepository>();
+builder.Services.AddScoped<IClinicDoctorRepository, ClinicDoctorRepository>();
 
 
 builder.Services.AddControllers();
