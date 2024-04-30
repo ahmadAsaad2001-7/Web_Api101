@@ -61,12 +61,23 @@ namespace Web_Api101.Controllers
             return Ok(res);
         }
 
+        [HttpGet("hospitalId")]
+        [ProducesResponseType(200, Type = typeof(doctors))]
+        public IActionResult GetDoctorByhospital(int hospitalId)
+        {
+            var res = _mapper.Map<List<DoctorsDto>>(_doctorRepository.GetDoctorsByHospitalId(hospitalId));
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+
+            return Ok(res);
+        }
 
         [HttpGet("phoneNumber")]
         [ProducesResponseType(200, Type = typeof(doctors))]
         public IActionResult GetDoctorByPhone(string phoneNumber)
         {
-            var res = _mapper.Map<List<DoctorsDto>>(_doctorRepository.GetDoctorsByPhone(phoneNumber));
+            var res = _mapper.Map<DoctorsDto>(_doctorRepository.GetDoctorsByPhone(phoneNumber));
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 

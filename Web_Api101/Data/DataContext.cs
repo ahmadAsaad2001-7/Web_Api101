@@ -1,10 +1,13 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using System.Numerics;
 using Web_Api101.models;
+using Web_Api101.Models;
 
 namespace Web_Api101.Data
 {
-    public class DataContext : DbContext
+    public class DataContext : IdentityDbContext<ApplicationUser>
     {
         
 
@@ -23,6 +26,12 @@ namespace Web_Api101.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<IdentityUserLogin<string>>()
+       .HasNoKey(); 
+            modelBuilder.Entity<IdentityUserRole<string>>()
+        .HasNoKey();
+            modelBuilder.Entity<IdentityUserToken<string>>()
+        .HasNoKey();
             //doctor_clinic
             modelBuilder.Entity<doctor_clinic>().HasKey(dc => new { dc.clinic_id, dc.doctor_id });
             modelBuilder.Entity<doctor_clinic>().HasOne(d => d.doctor)
@@ -45,6 +54,7 @@ namespace Web_Api101.Data
                 .WithMany(hd => hd.hospital_Doctors).HasForeignKey(hd => hd.hospital_id);
             modelBuilder.Entity<hospital_doctor>().HasOne(d => d.doctor)
                 .WithMany(hd => hd.hospital_Doctors).HasForeignKey(hd => hd.doctor_id);
+           
             //one-to-many relationships
             modelBuilder.Entity<doctors>()
        .HasMany(o => o.phones)             // Order has many OrderItems
@@ -90,6 +100,21 @@ namespace Web_Api101.Data
                     new clinics { Id = 2,  locid = 2 }
                 // Add more hospitals as needed
                 );
+
+            List<IdentityRole> roles = new List<IdentityRole>
+            {
+                new IdentityRole
+                {
+                    Name = "Admin",
+                    NormalizedName = "ADMIN"
+                },
+                new IdentityRole
+                {
+                    Name = "User",
+                    NormalizedName = "USER"
+                },
+            };
+            modelBuilder.Entity<IdentityRole>().HasData(roles);
 
 
         }

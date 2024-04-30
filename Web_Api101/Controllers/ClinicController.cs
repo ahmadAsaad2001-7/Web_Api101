@@ -15,12 +15,15 @@ namespace Web_Api101.Controllers
     {
         private readonly ILocationRepository _locationRepository;
         private readonly IClinicRepository _clinicRepository;
+        private readonly IDoctorRepository _doctorRepository;
+
         private readonly IMapper _mapper;
-        public ClinicController(IClinicRepository clinicRepository, IMapper mapper, ILocationRepository locationRepository)
+        public ClinicController(IClinicRepository clinicRepository, IMapper mapper, ILocationRepository locationRepository,IDoctorRepository doctorRepository)
         {
+            _doctorRepository = doctorRepository;
             _clinicRepository= clinicRepository  ;
-            _mapper = mapper;
             _locationRepository = locationRepository;
+            _mapper = mapper;
         }
 
 
@@ -42,7 +45,7 @@ namespace Web_Api101.Controllers
         {
             if (!_clinicRepository.clinicExists(clinicId))
                 return NotFound();
-            var res = _mapper.Map<DoctorsDto>(_clinicRepository.GetClinicsById(clinicId));
+            var res = _mapper.Map<ClinicsDto>(_clinicRepository.GetClinicsById(clinicId));
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
@@ -55,9 +58,9 @@ namespace Web_Api101.Controllers
         [ProducesResponseType(200, Type = typeof(clinics))]
         public IActionResult GetCLinicBydoctor(int doctorId)
         {
-            if (!_clinicRepository.clinicExists(doctorId))
+            if (!_doctorRepository.DoctorExist(doctorId))
                 return NotFound();
-            var res = _mapper.Map<DoctorsDto>(_clinicRepository.GetClinicsBydoctorId(doctorId));
+            var res = _clinicRepository.GetClinicsBydoctorId(doctorId);
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
@@ -66,6 +69,20 @@ namespace Web_Api101.Controllers
 
         }
 
+        [HttpGet("locationId")]
+        [ProducesResponseType(200, Type = typeof(clinics))]
+        public IActionResult GetCLinicBylocation(int locationId)
+        {
+            if (!_doctorRepository.DoctorExist(locationId))
+                return NotFound();
+            var res = _clinicRepository.GetClinicsByLocation(locationId);
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            return Ok(res);
+
+
+        }
 
         //create
         [HttpPost]

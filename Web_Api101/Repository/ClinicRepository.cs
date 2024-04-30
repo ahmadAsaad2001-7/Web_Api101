@@ -57,7 +57,7 @@ namespace Web_Api101.Repository
         }
         public ICollection<clinics> GetClinicsBydoctorId(int doctor_id)
         {
-            return _Context.clinics.Where(h => h.doctor_Clinics.Any(d=>d.doctor_id == doctor_id) ).ToList();
+            return _Context.doctor_Clinics.Where(hd => hd.doctor_id == doctor_id).Select(hd => hd.clinic).ToList();
         }
 
         public bool Save()

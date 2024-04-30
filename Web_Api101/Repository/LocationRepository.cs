@@ -1,4 +1,5 @@
-﻿using Web_Api101.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using Web_Api101.Data;
 using Web_Api101.Interface;
 using Web_Api101.models;
 
@@ -12,12 +13,17 @@ namespace Web_Api101.Repository
         }
         public bool CreateLocation(location location)
         {
-            throw new NotImplementedException();
+            _context.Add(location);
+            return Save();
         }
 
-        public bool DeleteLocation(location location)
+        public bool DeleteLocation(location c)
         {
-            throw new NotImplementedException();
+            _context.Remove(c);
+            return Save();
+
+
+
         }
 
         public location GetLocation(int location_id)
