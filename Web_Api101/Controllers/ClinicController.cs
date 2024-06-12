@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Web_Api101.Dto;
@@ -30,7 +31,7 @@ namespace Web_Api101.Controllers
         //get
         [HttpGet]
         [ProducesResponseType(200, Type = typeof(IEnumerable<clinics>))]
-
+        [Authorize(Roles = "User,Admin")]
         public IActionResult GetClinics()
         {
             var clinic = _mapper.Map<List<ClinicsDto>>(_clinicRepository.GetClinics());
@@ -41,6 +42,7 @@ namespace Web_Api101.Controllers
         }
         [HttpGet("clinicId")]
         [ProducesResponseType(200, Type = typeof(clinics))]
+        [Authorize(Roles = "User,Admin")]
         public IActionResult GetCLinic(int clinicId)
         {
             if (!_clinicRepository.clinicExists(clinicId))
@@ -56,6 +58,7 @@ namespace Web_Api101.Controllers
 
         [HttpGet("doctorId")]
         [ProducesResponseType(200, Type = typeof(clinics))]
+        [Authorize(Roles = "User,Admin")]
         public IActionResult GetCLinicBydoctor(int doctorId)
         {
             if (!_doctorRepository.DoctorExist(doctorId))
@@ -71,6 +74,7 @@ namespace Web_Api101.Controllers
 
         [HttpGet("locationId")]
         [ProducesResponseType(200, Type = typeof(clinics))]
+        [Authorize(Roles = "User,Admin")]
         public IActionResult GetCLinicBylocation(int locationId)
         {
             if (!_doctorRepository.DoctorExist(locationId))
@@ -88,6 +92,7 @@ namespace Web_Api101.Controllers
         [HttpPost]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
+        [Authorize(Roles = "Admin")]
         public IActionResult CreateClinic([FromQuery] int locid, [FromQuery] int doctorId, [FromBody] ClinicsDto clinicCreate)
         {
             if (clinicCreate == null)
@@ -129,6 +134,7 @@ namespace Web_Api101.Controllers
         [ProducesResponseType(400)]
         [ProducesResponseType(204)]
         [ProducesResponseType(404)]
+        [Authorize(Roles = "Admin")]
         public IActionResult DeleteDoctor(int clinicId)
         {
             if (!_clinicRepository.clinicExists(clinicId))

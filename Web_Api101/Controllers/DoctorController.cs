@@ -7,16 +7,18 @@ using Web_Api101.models;
 using AutoMapper;
 using Web_Api101.Dto;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Web_Api101.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+
     public class DoctorController : ControllerBase
     {
         private readonly IDoctorRepository _doctorRepository;
         private readonly IMapper _mapper;
-        public DoctorController(IDoctorRepository doctorRepository,IMapper mapper)
+        public DoctorController(IDoctorRepository doctorRepository, IMapper mapper)
         {
             _doctorRepository = doctorRepository;
             _mapper = mapper;
@@ -24,6 +26,7 @@ namespace Web_Api101.Controllers
         }
         //get
         [HttpGet]
+        [Authorize(Roles = "User,Admin")]
         [ProducesResponseType(200, Type = typeof(IEnumerable<doctors>))]
 
         public IActionResult GetDoctors() 
@@ -36,6 +39,7 @@ namespace Web_Api101.Controllers
         }
         [HttpGet("doctorId")]
         [ProducesResponseType(200, Type = typeof(doctors))]
+        [Authorize(Roles = "User,Admin")]
         public IActionResult GetDoctor(int doctorId)
         {
             if (!_doctorRepository.DoctorExist(doctorId)) 
@@ -51,6 +55,7 @@ namespace Web_Api101.Controllers
 
         [HttpGet("locationId")]
         [ProducesResponseType(200, Type = typeof(doctors))]
+        [Authorize(Roles = "User,Admin")]
         public IActionResult GetDoctorBylocation(int locationId)
         {
             var res = _mapper.Map < List < DoctorsDto >> (_doctorRepository.GetDoctorsByLocation_id(locationId));
@@ -62,6 +67,7 @@ namespace Web_Api101.Controllers
         }
 
         [HttpGet("hospitalId")]
+        [Authorize(Roles = "User,Admin")]
         [ProducesResponseType(200, Type = typeof(doctors))]
         public IActionResult GetDoctorByhospital(int hospitalId)
         {
@@ -74,6 +80,7 @@ namespace Web_Api101.Controllers
         }
 
         [HttpGet("phoneNumber")]
+        [Authorize(Roles = "User,Admin")]
         [ProducesResponseType(200, Type = typeof(doctors))]
         public IActionResult GetDoctorByPhone(string phoneNumber)
         {
@@ -90,6 +97,7 @@ namespace Web_Api101.Controllers
         [ProducesResponseType(400)]
         [ProducesResponseType(204)]
         [ProducesResponseType(404)]
+        [Authorize(Roles = "Admin")]
         public IActionResult DeleteDoctor(int doctorId)
         {
             if (!_doctorRepository.DoctorExist(doctorId))
@@ -117,6 +125,7 @@ namespace Web_Api101.Controllers
         [ProducesResponseType(400)]
         [ProducesResponseType(204)]
         [ProducesResponseType(404)]
+        [Authorize(Roles = "Admin")]
         public IActionResult UpdateOwner(int doctorId, [FromQuery] int ClinicId, [FromQuery] int hospitalId, [FromBody] DoctorsDto updatedDoctor)
         {
             if (updatedDoctor == null)
@@ -147,6 +156,7 @@ namespace Web_Api101.Controllers
         [HttpPost]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
+        [Authorize(Roles = "Admin")]
         public IActionResult CreateDoctor([FromQuery] int ClinicId, [FromQuery] int hospitalId, [FromBody] DoctorsDto doctorsCreate)
         {
             if (doctorsCreate == null)

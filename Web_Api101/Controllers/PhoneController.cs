@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Web_Api101.Dto;
@@ -25,6 +26,7 @@ namespace Web_Api101.Controllers
         //get
         [HttpGet]
         [ProducesResponseType(200, Type = typeof(IEnumerable<phones>))]
+        [Authorize(Roles = "User,Admin")]
         public IActionResult Getphones()
         {
             var locations = _mapper.Map<List<PhonesDto>>(_phoneRepository.GetPhones());
@@ -35,6 +37,7 @@ namespace Web_Api101.Controllers
 
         [HttpGet("phoneId")]
         [ProducesResponseType(200, Type = typeof(phones))]
+        [Authorize(Roles = "User,Admin")]
         public IActionResult GetPhoneById(int phoneId)
         {
             if (!_phoneRepository.phoneExist(phoneId))
@@ -49,6 +52,7 @@ namespace Web_Api101.Controllers
         }
         [HttpGet("hospitalId")]
         [ProducesResponseType(200, Type = typeof(phones))]
+        [Authorize(Roles = "User,Admin")]
         public IActionResult GetPhoneByHospital(int hospitalId)
         {
             var res = _mapper.Map<List<PhonesDto>>(_phoneRepository.GetPhonebyhospitalId(hospitalId));
@@ -60,6 +64,7 @@ namespace Web_Api101.Controllers
         }
         [HttpGet("doctorId")]
         [ProducesResponseType(200, Type = typeof(phones))]
+        [Authorize(Roles = "User,Admin")]
         public IActionResult GetPhoneByDoctor(int doctorId)
         {
             var res = _mapper.Map<List<PhonesDto>>(_phoneRepository.GetPhonebydoctorId(doctorId));
@@ -76,6 +81,7 @@ namespace Web_Api101.Controllers
         [HttpPost]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
+        [Authorize(Roles = "Admin")]
         public IActionResult CreateClinic([FromBody] PhonesDto phonesCreate)
         {
             if (phonesCreate == null)
@@ -115,6 +121,7 @@ namespace Web_Api101.Controllers
         [ProducesResponseType(400)]
         [ProducesResponseType(204)]
         [ProducesResponseType(404)]
+        [Authorize(Roles = "Admin")]
         public IActionResult DeleteDoctor(int phoneId)
         {
             if (!_phoneRepository.phoneExist(phoneId))

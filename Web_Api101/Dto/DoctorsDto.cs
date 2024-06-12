@@ -6,6 +6,8 @@
         public string name { get; set; }
         public string speciality { get; set; }
         public char gender { get; set; }
+        public virtual int? LocationId { get; set; }
+
 
     }
 }

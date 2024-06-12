@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Web_Api101.Dto;
@@ -24,6 +25,7 @@ namespace Web_Api101.Controllers
         //get
         [HttpGet]
         [ProducesResponseType(200, Type = typeof(IEnumerable<location>))]
+        [Authorize(Roles = "User,Admin")]
         public IActionResult GetLocations() 
         {
             var locations = _mapper.Map<List<LocationDto>>(_locationRepository.GetLocations());
@@ -34,6 +36,7 @@ namespace Web_Api101.Controllers
 
         [HttpGet("locationId")]
         [ProducesResponseType(200, Type = typeof(location))]
+        [Authorize(Roles = "User,Admin")]
         public IActionResult GetCLinic(int locationId)
         {
             if (!_locationRepository.LocationExists(locationId))
@@ -50,6 +53,7 @@ namespace Web_Api101.Controllers
         [HttpPost]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
+        [Authorize(Roles = "Admin")]
         public IActionResult CreateClinic( [FromBody] LocationDto locationCreate)
         {
             if (locationCreate == null)
@@ -91,6 +95,7 @@ namespace Web_Api101.Controllers
         [ProducesResponseType(400)]
         [ProducesResponseType(204)]
         [ProducesResponseType(404)]
+        [Authorize(Roles = "Admin")]
         public IActionResult DeleteDoctor(int locationId)
         {
             if (!_locationRepository.LocationExists(locationId))

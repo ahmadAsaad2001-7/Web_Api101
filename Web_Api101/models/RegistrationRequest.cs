@@ -14,6 +14,6 @@ namespace Web_Api101.Models
         [Required]
         public string? Password { get; set; }
 
-        public Role Role { get; set; }
+        public Role Role { get; set; } = Role.User;
     }
 }

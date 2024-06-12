@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Web_Api101.Dto;
@@ -22,6 +23,7 @@ namespace Web_Api101.Controllers
 
         [HttpGet]
         [ProducesResponseType(200, Type = typeof(IEnumerable<HospitalDto>))]
+        [Authorize(Roles = "User,Admin")]
 
         public IActionResult GetHospitals()
         {
@@ -34,6 +36,7 @@ namespace Web_Api101.Controllers
 
         [HttpGet("locationId")]
         [ProducesResponseType(200, Type = typeof(hospitals))]
+        [Authorize(Roles = "User,Admin")]
         public IActionResult GetHospitalBylocation(int locationId)
         {
             var res = (_hospitalRepository.GetHospitalsByLocationId(locationId));
@@ -43,6 +46,8 @@ namespace Web_Api101.Controllers
 
         [HttpGet("HospitalPhone")]
         [ProducesResponseType(200, Type = typeof(hospitals))]
+        [Authorize(Roles = "User,Admin")]
+
         public IActionResult GetHospitalByPhone(string HospitalPhone)
         {
             var res = (_hospitalRepository.GetHospitalsByPhone(HospitalPhone));
@@ -50,7 +55,7 @@ namespace Web_Api101.Controllers
             return Ok(res);
         }
         //Create
-        [HttpPost]
+        [HttpPost, Authorize(Roles = "Admin")]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         public IActionResult CreateDoctor(  [FromBody] HospitalDto hospitalCreate)

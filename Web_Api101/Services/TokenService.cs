@@ -34,7 +34,7 @@
 
         private List<Claim> CreateClaims(ApplicationUser user)
         {
-            var jwtSub = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build().GetSection("JwtTokenSettings")["JwtRegisteredClaimNamesSub"];
+            var jwtSub = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build().GetSection("JWT")["JwtRegisteredClaimNamesSub"];
 
             try
             {
@@ -60,18 +60,18 @@
         private JwtSecurityToken CreateJwtToken(List<Claim> claims, SigningCredentials credentials,
             DateTime expiration) =>
             new(
-                new ConfigurationBuilder().AddJsonFile("appsettings.json").Build().GetSection("JwtTokenSettings")["ValidIssuer"],
-                new ConfigurationBuilder().AddJsonFile("appsettings.json").Build().GetSection("JwtTokenSettings")["ValidAudience"],
+                new ConfigurationBuilder().AddJsonFile("appsettings.json").Build().GetSection("JWT")["ValidIssuer"],
+                new ConfigurationBuilder().AddJsonFile("appsettings.json").Build().GetSection("JWT")["ValidAudience"],
                 claims,
                 expires: expiration,
                 signingCredentials: credentials
             );
 
-        
+
 
         private SigningCredentials CreateSigningCredentials()
         {
-            var symmetricSecurityKey = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build().GetSection("JwtTokenSettings")["SymmetricSecurityKey"];
+            var symmetricSecurityKey = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build().GetSection("JWT")["SecretKey"];
 
             return new SigningCredentials(
                 new SymmetricSecurityKey(
